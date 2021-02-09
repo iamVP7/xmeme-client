@@ -1,75 +1,100 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <h1 @click="bodyClick()">{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
     
+    
+
+<div v-if="displayMemes" class="masterdiv">
+
+
+   <!--  <v-canvas-element v-for="item in memesJSON" v-bind:key="item.id"
+       
+       :id=item.id
+      :content="item.name"
+      label=""
+      :title="item.caption"
+      width="250px"
+      height="460px"
+      :image="item.url"
+      :back_color="item.url"
+    /> -->
+   
+    </div>
+
+
+  <h1>Latest Memes</h1>
+  <div class="location-contain">
+    <div class="locations" v-for="location in memesJSON" :key="location.id" :id="location.id">
+       <div class="place">
+      <img :src="location.url" width="300" height="300"/>
+      <slot></slot>
+        <h2>Submitted by : {{ location.name }}</h2>
+      <p>Caption : {{ location.caption }}</p>
+      <div style=" text-align: right;  ">
+      <img src="./assets/edit.png" width="24px" height="24px">
+      </div>
+       </div>
+    </div>
   </div>
+
+
+</div>
+  
 
   
 </template>
 
+
 <script>
 import connections from './js/conection'
+
+
+
 export default {
   name: 'app',
   data () {
     return {
+      displayMemes :false,
+      memesJSON:[],
+      memesResponse:[],
       msg: 'Welcome to XMEME'
     }
   },
   methods: {
-    beforeMount () {
-      this.memesResponse = connections.axiosGet('')
+      bodyClick: async function () {
+        this.memesResponse = (await connections.axiosGet(''))
+        this.memesJSON = this.memesResponse.data;
+        this.displayMemes = true;
       console.log(this.memesResponse);
-      },
-      bodyClick(){
-        this.memesResponse = connections.axiosGet('')
-      console.log(this.memesResponse);
+      console.log(this.memesResponse.data);
+      console.log(this.memesResponse['data']);
       }
-
-  }
+  },
+  async mounted () {
+		this.bodyClick()
+	}
+  
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.place {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: white;
+  border: 1px solid #ddd;
+  padding: 20px 20px;
+  margin: 10px;
+  flex: 0 0 33.333333%;
+    list-style: none;
+    height: 400px;
+    
 }
 
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
+.location-contain {
+  display: flex;
+  justify-content: wrap;
+  padding-left: 0;
+  max-width: inherit;
 }
 </style>

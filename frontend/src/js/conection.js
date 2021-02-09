@@ -14,17 +14,10 @@ var patchInstance = Axios.create({
 	baseURL: masterBaseURL
 })
 var connections = {
-	axiosGetLocal: function (apiUrl) {
-		return localinstance.get(apiUrl).then(function (response) {
-			return response.data
-		}).catch(error => {
-			error.response.code = error.response.status
-			return error.response
-		})
-	}, // For localhost:3000
+
 	axiosGet: function (apiUrl) {
 		return instance.get(apiUrl).then(function (response) {
-			return response.data
+			return response
 		}).catch(error => {
 			error.response.code = error.response.status
 			return error.response
@@ -43,7 +36,7 @@ var connections = {
 	},
 	axiosPATCH: function (apiUrl, data) {
 		return patchInstance.patch(apiUrl, data).then(function (response) {
-			return response
+			return response.data ? response.data : response
 		}).catch(error => {
 			error.response.code = error.response.status
 			return error.response
