@@ -13,11 +13,7 @@ module.exports = {
     proxyTable: {
 			// proxy all requests starting with /api to jsonplaceholder
 			'/memes': {
-				 target: 'http://viswa-2561.csez.zohocorpin.com:9443',
-				changeOrigin: true,
-				pathRewrite: {
-					'^/thrive/api': '/thrive/api'
-				}
+				 target: 'http://localhost:7070',
 			}
     },
 

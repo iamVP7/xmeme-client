@@ -54,6 +54,8 @@ module.exports = {
     noInfo: true,
     overlay: true,
     port: PORT || config.dev.port,
+    host: HOST || config.dev.host,
+    proxy: config.dev.proxyTable,
   },
   performance: {
     hints: false
