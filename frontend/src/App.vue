@@ -6,36 +6,31 @@
 <div v-if="displayMemes" class="masterdiv">
 
 
-   <!--  <v-canvas-element v-for="item in memesJSON" v-bind:key="item.id"
-       
-       :id=item.id
-      :content="item.name"
-      label=""
-      :title="item.caption"
-      width="250px"
-      height="460px"
-      :image="item.url"
-      :back_color="item.url"
-    /> -->
    
     </div>
 
 
   <h1>Latest Memes</h1>
+      <button class="btn" @click="openCreateMeme">CreateDialogue</button>
+  <CreateDialogue
+      v-show="isCreateMemeVisible"
+      v-on:my-event="doSomething"
+      @close="closeCreateMeme"
+    />
+
   <div class="location-contain">
     <div class="locations" v-for="location in memesJSON" :key="location.id" :id="location.id">
        <div class="place">
+         <div>
       <img :src="location.url" width="300" height="300"/>
       <slot></slot>
         <h2>Submitted by : {{ location.name }}</h2>
       <p>Caption : {{ location.caption }}</p>
-      <div style=" text-align: right;  ">
-      <img src="./assets/edit.png" width="24px" height="24px">
       </div>
        </div>
     </div>
   </div>
-
+    
 
 </div>
   
@@ -44,19 +39,27 @@
 </template>
 
 
+
 <script>
 import connections from './js/conection'
-
-
+    import ModalDirection from "./Dialogue";
+    import CreateDialogue from "./CreateDialogue";
 
 export default {
   name: 'app',
+   components: {
+    ModalDirection,CreateDialogue 
+  },
   data () {
     return {
       displayMemes :false,
       memesJSON:[],
       memesResponse:[],
-      msg: 'Welcome to XMEME'
+      msg: 'Welcome to XMEME',
+      modalOpen: false,
+      isModalVisible: false,
+      isCreateMemeVisible : false,
+      currentMeme:null
     }
   },
   methods: {
@@ -67,6 +70,45 @@ export default {
       console.log(this.memesResponse);
       console.log(this.memesResponse.data);
       console.log(this.memesResponse['data']);
+      },
+       openModal() {
+            this.modalOpen = !this.modalOpen;
+        } ,
+        showModal() {
+        this.isModalVisible = true;
+      },
+      closeModal() {
+        this.isModalVisible = false;
+      },
+
+      openCreateMeme(){
+        this.isCreateMemeVisible = true
+      },
+      closeCreateMeme(){
+        this.isCreateMemeVisible = false
+      },
+      doSomething: async function(url,name,caption){
+        var jsonToSend = {};
+          jsonToSend['url'] = url;
+          jsonToSend['name'] = name;
+          jsonToSend['caption'] = caption;
+
+          var postResponse = (await connections.axiosPost('',jsonToSend))
+          console.log(postResponse);
+          if (postResponse.id) {
+            this.isCreateMemeVisible = false;
+                    location.reload();
+          } else if(postResponse.code == 409){
+            this.isCreateMemeVisible = false;
+            this.url = null;
+            alert('You have submitted same URL and caption');
+          }
+      },
+      swapComponent :function(memeToShow){
+
+        console.log(memeToShow)
+       this.currentMeme =memeToShow; 
+       this.isModalVisible = true;
       }
   },
   async mounted () {
@@ -85,16 +127,17 @@ export default {
   border: 1px solid #ddd;
   padding: 20px 20px;
   margin: 10px;
-  flex: 0 0 33.333333%;
+  width: 25%;
     list-style: none;
-    height: 400px;
-    
+    height: 450px;
+    max-height: 500px;
+    float: left;
 }
 
 .location-contain {
-  display: flex;
   justify-content: wrap;
   padding-left: 0;
   max-width: inherit;
 }
+
 </style>
