@@ -75,7 +75,7 @@
           id="createmodalDescription"
         >
           <slot name="createbody">
-            <input v-model="url" placeholder="Submit meme URL" id="create-meme-url">
+            <input v-model="url" placeholder="URL with jpg,jpeg and png allowed" id="create-meme-url">
           </slot>
         </section>
 
