@@ -18,19 +18,20 @@
       @close="closeCreateMeme"
     />
 
-  <div class="location-contain">
-    <div class="locations" v-for="location in memesJSON" :key="location.id" :id="location.id">
-       <div class="place">
+  <div class="memes-contain">
+    <div class="locations" v-for="singleMeme in memesJSON" :key="singleMeme.id" :id="singleMeme.id">
+       <div class="single-meme">
          <div>
-      <img :src="location.url" width="300" height="300"/>
+      <img :src="singleMeme.url" width="300" height="300"/>
       <slot></slot>
-        <h2>Submitted by : {{ location.name }}</h2>
-      <p>Caption : {{ location.caption }}</p>
+        <h2>Submitted by : {{ singleMeme.name }}</h2>
+      <p>Caption : {{ singleMeme.caption }}</p>
+      <i>Posted at: {{convertToDate(singleMeme.created_time)}}</i>
       </div>
        </div>
     </div>
   </div>
-    
+  
 
 </div>
   
@@ -44,6 +45,7 @@
 import connections from './js/conection'
     import ModalDirection from "./Dialogue";
     import CreateDialogue from "./CreateDialogue";
+    import moment from 'moment'
 
 export default {
   name: 'app',
@@ -59,18 +61,23 @@ export default {
       modalOpen: false,
       isModalVisible: false,
       isCreateMemeVisible : false,
-      currentMeme:null
+      currentMeme:null,
+      authorid:null,
     }
   },
   methods: {
       bodyClick: async function () {
         this.memesResponse = (await connections.axiosGet(''))
-        this.memesJSON = this.memesResponse.data;
+        if(this.memesResponse.status ==200){
+          this.memesJSON = this.memesResponse.data;
+        }
+        
         this.displayMemes = true;
-      console.log(this.memesResponse);
-      console.log(this.memesResponse.data);
-      console.log(this.memesResponse['data']);
+        console.log(this.memesResponse.status)
       },
+      convertToDate: function (date) {
+        return moment(parseInt(date)).format('DD MMM YYYY')	// No I18N
+        },
        openModal() {
             this.modalOpen = !this.modalOpen;
         } ,
@@ -102,6 +109,10 @@ export default {
             this.isCreateMemeVisible = false;
             this.url = null;
             alert('You have submitted same URL and caption');
+          } else if(postResponse.code == 404){
+            this.isCreateMemeVisible = false;
+            this.url = null;
+            alert('URL should start with http:// or https:// and end with jpeg or jpg or png with not more than 1000 chars');
           }
       },
       swapComponent :function(memeToShow){
@@ -119,7 +130,7 @@ export default {
 </script>
 
 <style>
-.place {
+.single-meme {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -134,7 +145,7 @@ export default {
     float: left;
 }
 
-.location-contain {
+.memes-contain {
   justify-content: wrap;
   padding-left: 0;
   max-width: inherit;
