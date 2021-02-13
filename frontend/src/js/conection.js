@@ -19,7 +19,6 @@ var connections = {
 		return instance.get(apiUrl).then(function (response) {
 			return response
 		}).catch(error => {
-			error.response.code = error.response.status
 			return error.response
 		})
 	},
@@ -30,7 +29,6 @@ var connections = {
 			// this.activateLoading(false)
 			return response.data ? response.data : response
 		}).catch(error => {
-			error.response.code = error.response.status
 			return error.response
 		})
 	},
@@ -38,7 +36,6 @@ var connections = {
 		return patchInstance.patch(apiUrl, data).then(function (response) {
 			return response.data ? response.data : response
 		}).catch(error => {
-			error.response.code = error.response.status
 			return error.response
 		})
 	},

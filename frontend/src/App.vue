@@ -109,10 +109,10 @@ export default {
             this.isCreateMemeVisible = false;
             this.url = null;
             alert('You have submitted same URL and caption');
-          } else if(postResponse.code == 404){
+          } else if(postResponse.status == 404){
             this.isCreateMemeVisible = false;
             this.url = null;
-            alert('URL should start with http:// or https:// and end with jpeg or jpg or png with not more than 1000 chars');
+            alert(postResponse.data.message);
           }
       },
       swapComponent :function(memeToShow){
