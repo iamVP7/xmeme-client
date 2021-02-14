@@ -1,6 +1,9 @@
 import Axios from '../../node_modules/axios'
 
-var masterBaseURL = '/memes' // No I18N
+/*var masterBaseURL = '/memes' // No I18N
+ */
+var masterBaseURL = 'http://ec2-18-218-95-245.us-east-2.compute.amazonaws.com:8081/memes'; // NO I18N
+
 var localinstance = Axios.create({
 	baseURL: '/'
 })
