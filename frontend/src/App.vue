@@ -105,7 +105,7 @@ export default {
           if (postResponse.id) {
             this.isCreateMemeVisible = false;
                     location.reload();
-          } else if(postResponse.code == 409){
+          } else if(postResponse.status == 409){
             this.isCreateMemeVisible = false;
             this.url = null;
             alert('You have submitted same URL and caption');

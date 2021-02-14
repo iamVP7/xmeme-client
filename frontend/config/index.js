@@ -13,7 +13,7 @@ module.exports = {
     proxyTable: {
 			// proxy all requests starting with /api to jsonplaceholder
 			'/memes': {
-				 target: 'http://localhost:7070',
+				 target: 'http://ec2-18-218-95-245.us-east-2.compute.amazonaws.com:8081/',
 			}
     },
 
